@@ -97,10 +97,6 @@ public class ControllerJavaFilesPlugin extends PluginAdapter {
         cls.addImportedType("org.springframework.validation.BindingResult");
         cls.addImportedType("org.springframework.ui.ModelMap");
         cls.addImportedType("org.springframework.ui.Model");
-        cls.addImportedType("com.jimu.merak.in.ext.CurrentUser");
-        cls.addImportedType("com.jimu.merak.auth.model.InnerUser");
-        cls.addImportedType("com.jimu.merak.common.tips.NotificationTips");
-        cls.addImportedType("com.jimu.merak.in.vmmodel.ViewModelNumberPager");
         cls.addImportedType("com.github.pagehelper.Page");
         cls.addImportedType("com.github.pagehelper.PageHelper");
         cls.addImportedType("com.google.common.base.Function");
