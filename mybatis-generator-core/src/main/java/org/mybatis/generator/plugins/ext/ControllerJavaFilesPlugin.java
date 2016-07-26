@@ -106,6 +106,10 @@ public class ControllerJavaFilesPlugin extends PluginAdapter {
         cls.addImportedType("java.util.List");
         cls.addImportedType("java.util.Map");
         cls.addImportedType("javax.validation.Valid");
+        cls.addImportedType("com.jimubox.auth.shiro.ext.CurrentUser");
+        cls.addImportedType("com.jimubox.auth.shiro.model.InnerUser");
+        cls.addImportedType("com.jimubox.tools.view.NotificationTips");
+        cls.addImportedType("com.jimubox.tools.view.ViewModelNumberPager");
 
         cls.addImportedType(String.format("%s.%sService", serviceBasePackage, domainObjectName));
         cls.addImportedType(String.format("%s.Vm%s", vmmodelBasePackage, domainObjectName));
