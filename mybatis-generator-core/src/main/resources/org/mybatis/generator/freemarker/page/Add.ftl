@@ -35,6 +35,37 @@
             <input type="hidden" value="${r'${test}'}"><!-- 此处为解决IDEA报错问题 -->
             <!-- Hidden -->
 
+            <div class="page-header" style="margin: 30px 0 20px">
+                <h3>&nbsp;
+                    <small>主键</small>
+                </h3>
+            </div>
+        <#list keyColumnList as keyColumn>
+            <div class="form-group">
+                <label for="${keyColumn.javaProperty}" class="col-sm-2 control-label">${keyColumn.remarks}</label>
+
+                <div class="col-sm-4">
+                    <div class="input-group">
+                        <span class="input-group-addon">*</span>
+                        <#if keyColumn.fullyQualifiedJavaType == "java.util.Date">
+                            <input class="js-datetimeHour-picker form-control" type="text" id="${keyColumn.javaProperty}" name="${keyColumn.javaProperty}"/>
+                        <#else>
+                            <sf:input cssClass="form-control" path="${keyColumn.javaProperty}" id="${keyColumn.javaProperty}" placeholder="最长${keyColumn.length}" maxlength="${keyColumn.length}"/>
+                        </#if>
+                    </div>
+                </div>
+                <label for="${keyColumn.javaProperty}" class="col-sm-6 control-label inputError_GSM">
+                    <sf:errors path="${keyColumn.javaProperty}"/>
+                </label>
+            </div>
+
+        </#list>
+
+            <div class="page-header" style="margin: 30px 0 20px">
+                <h3>&nbsp;
+                    <small>基本信息</small>
+                </h3>
+            </div>
         <#list baseColumnList as baseColumn>
             <div class="form-group">
                 <label for="${baseColumn.javaProperty}" class="col-sm-2 control-label">${baseColumn.remarks}</label>
@@ -45,7 +76,7 @@
                         <#if baseColumn.fullyQualifiedJavaType == "java.util.Date">
                             <input class="js-datetimeHour-picker form-control" type="text" id="${baseColumn.javaProperty}" name="${baseColumn.javaProperty}"/>
                         <#else>
-                            <sf:input cssClass="form-control" path="${baseColumn.javaProperty}" id="${baseColumn.javaProperty}"/>
+                            <sf:input cssClass="form-control" path="${baseColumn.javaProperty}" id="${baseColumn.javaProperty}" placeholder="最长${baseColumn.length}" maxlength="${baseColumn.length}"/>
                         </#if>
                     </div>
                 </div>

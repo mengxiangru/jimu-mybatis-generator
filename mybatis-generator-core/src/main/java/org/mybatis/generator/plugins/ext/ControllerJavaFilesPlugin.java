@@ -1,27 +1,24 @@
 /**
- *    Copyright 2006-2015 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2006-2015 the original author or authors.
+ * <p/>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.mybatis.generator.plugins.ext;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import org.mybatis.generator.api.GeneratedJavaFile;
-import org.mybatis.generator.api.IntrospectedTable;
-import org.mybatis.generator.api.Plugin;
-import org.mybatis.generator.api.PluginAdapter;
+import org.mybatis.generator.api.*;
 import org.mybatis.generator.api.dom.DefaultJavaFormatter;
 import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.internal.PluginAggregator;
@@ -250,11 +247,23 @@ public class ControllerJavaFilesPlugin extends PluginAdapter {
 
         //editGet method
         Method editGet = new Method();
-        editGet.addAnnotation(String.format("@RequestMapping(value = \"/edit%s/{id}\", method = RequestMethod.GET)", domainObjectName));
+        editGet.addAnnotation(String.format("@RequestMapping(value = \"/edit%s\", method = RequestMethod.GET)", domainObjectName));
         editGet.setVisibility(JavaVisibility.PUBLIC);
         editGet.setName(String.format("edit%s", domainObjectName));
         editGet.setReturnType(FullyQualifiedJavaType.getStringInstance());
-        editGet.addParameter(new Parameter(FullyQualifiedJavaType.getIntInstance(), "id", "@PathVariable"));
+
+        if (introspectedTable.hasPrimaryKeyColumns()) {
+            List<IntrospectedColumn> primaryKeyColumns = introspectedTable.getPrimaryKeyColumns();
+
+            if (primaryKeyColumns.size() > 1) {
+                editGet.addParameter(new Parameter(new FullyQualifiedJavaType(new FullyQualifiedJavaType(introspectedTable.getPrimaryKeyType()).getShortName()), "key"));
+
+                cls.addImportedType(introspectedTable.getPrimaryKeyType());
+            } else {
+                editGet.addParameter(new Parameter(new FullyQualifiedJavaType(primaryKeyColumns.get(0).getFullyQualifiedJavaType().getShortName()), "key", "@RequestParam(name = \"" + primaryKeyColumns.get(0).getJavaProperty() + "\")"));
+            }
+        }
+
         editGet.addParameter(new Parameter(new FullyQualifiedJavaType("ModelMap"), "model"));
         editGet.addParameter(new Parameter(new FullyQualifiedJavaType("InnerUser"), "innerUser", "@CurrentUser"));
 
@@ -305,11 +314,21 @@ public class ControllerJavaFilesPlugin extends PluginAdapter {
 
         //delete method
         Method delete = new Method();
-        delete.addAnnotation(String.format("@RequestMapping(value = \"/delete%s/{id}\", method = RequestMethod.GET)", domainObjectName));
+        delete.addAnnotation(String.format("@RequestMapping(value = \"/delete%s\", method = RequestMethod.GET)", domainObjectName));
         delete.setVisibility(JavaVisibility.PUBLIC);
         delete.setName(String.format("delete%s", domainObjectName));
         delete.setReturnType(FullyQualifiedJavaType.getStringInstance());
-        delete.addParameter(new Parameter(FullyQualifiedJavaType.getIntInstance(), "id", "@PathVariable"));
+
+        if (introspectedTable.hasPrimaryKeyColumns()) {
+            List<IntrospectedColumn> primaryKeyColumns = introspectedTable.getPrimaryKeyColumns();
+
+            if (primaryKeyColumns.size() > 1) {
+                delete.addParameter(new Parameter(new FullyQualifiedJavaType(new FullyQualifiedJavaType(introspectedTable.getPrimaryKeyType()).getShortName()), "key"));
+            } else {
+                delete.addParameter(new Parameter(new FullyQualifiedJavaType(primaryKeyColumns.get(0).getFullyQualifiedJavaType().getShortName()), "key", "@RequestParam(name = \"" + primaryKeyColumns.get(0).getJavaProperty() + "\")"));
+            }
+        }
+
         delete.addParameter(new Parameter(new FullyQualifiedJavaType("ModelMap"), "model"));
         delete.addParameter(new Parameter(new FullyQualifiedJavaType("InnerUser"), "innerUser", "@CurrentUser"));
 

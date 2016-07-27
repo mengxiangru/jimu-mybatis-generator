@@ -21,7 +21,7 @@
 
             <!-- 搜索框 -->
             <div class="input-group navbar-right" style="width: 250px;margin-right: 20px;">
-                <input type="text" name="parameter" id="parameter" class="form-control" placeholder="名称.." value="${r'${parameter}'}"/>
+                <input type="text" name="parameter" id="parameter" class="form-control" placeholder="${placeholder}.." value="${r'${parameter}'}"/>
                     <span class="input-group-btn">
                         <button class="btn btn-info" type="submit">
                             <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
@@ -34,6 +34,9 @@
     <table class="table table-striped table-hover">
         <thead>
         <tr>
+        <#list keyColumnList as keyColumn>
+            <th>${keyColumn.remarks}</th>
+        </#list>
         <#list baseColumnList as baseColumn>
             <th>${baseColumn.remarks}</th>
         </#list>
@@ -43,6 +46,15 @@
         <tbody>
         <c:forEach var="item" items="${r'${vm'}${domainObjectName}List}">
             <tr>
+            <#list keyColumnList as keyColumn>
+                <#if keyColumn.fullyQualifiedJavaType == "java.util.Date">
+                    <td>
+                        <fmt:formatDate value='${r'${item.'}${keyColumn.javaProperty}}' pattern='yyyy-MM-dd HH:mm:ss'/>
+                    </td>
+                <#else>
+                    <td>${r'${item.'}${keyColumn.javaProperty}}</td>
+                </#if>
+            </#list>
             <#list baseColumnList as baseColumn>
                 <#if baseColumn.fullyQualifiedJavaType == "java.util.Date">
                     <td>
@@ -53,10 +65,10 @@
                 </#if>
             </#list>
                 <td>
-                    <button type="button" class="btn btn-info btn-xs" onclick="submitAction('/${domainObjectNameWithLower}/edit${domainObjectName}/${r'${item.id}'}')">
+                    <button type="button" class="btn btn-info btn-xs" onclick="submitAction('/${domainObjectNameWithLower}/edit${domainObjectName}?${primaryKey}')">
                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 编辑
                     </button>
-                    <button type="button" class="btn btn-info btn-xs" onclick="warningAction('确认删除？','/${domainObjectNameWithLower}/delete${domainObjectName}/${r'${item.id}'}')">
+                    <button type="button" class="btn btn-info btn-xs" onclick="warningAction('确认删除？','/${domainObjectNameWithLower}/delete${domainObjectName}?${primaryKey}')">
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 删除
                     </button>
                 </td>

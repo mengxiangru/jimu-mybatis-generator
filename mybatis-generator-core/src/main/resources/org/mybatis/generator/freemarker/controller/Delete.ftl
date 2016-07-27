@@ -1,7 +1,9 @@
 
-        ${domainObjectName} ${domainObjectNameWithLower} = ${domainObjectNameWithLower}Service.get${domainObjectName}ById(id);
+        ${domainObjectName} ${domainObjectNameWithLower} = ${domainObjectNameWithLower}Service.get${domainObjectName}ById(key);
 
-        ${domainObjectNameWithLower}Service.deleteById(${domainObjectNameWithLower}.getId());
+        if(${domainObjectNameWithLower} != null){
+                ${domainObjectNameWithLower}Service.deleteById(key);
+        }
 
         NotificationTips.setInfo("删除成功", getRequest());
         return "redirect:/${domainObjectNameWithLower}/list";

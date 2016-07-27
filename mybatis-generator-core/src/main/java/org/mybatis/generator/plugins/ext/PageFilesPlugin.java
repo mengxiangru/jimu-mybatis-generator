@@ -1,17 +1,17 @@
 /**
- *    Copyright 2006-2015 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2006-2015 the original author or authors.
+ * <p/>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.mybatis.generator.plugins.ext;
@@ -20,16 +20,16 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.mybatis.generator.api.GeneratedXmlFile;
+import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
-import org.mybatis.generator.api.dom.xml.Document;
 import org.mybatis.generator.api.dom.xml.TextElement;
-import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.plugins.freemarker.FreemarkerDocument;
 import org.mybatis.generator.plugins.freemarker.FreemarkerElement;
 import org.springframework.core.io.DefaultResourceLoader;
 
 import java.io.*;
+import java.sql.Types;
 import java.util.*;
 
 /**
@@ -64,6 +64,33 @@ public class PageFilesPlugin extends PluginAdapter {
         param.put("domainObjectName", domainObjectName);
         param.put("domainObjectNameWithLower", domainObjectNameWithLower);
         param.put("baseColumnList", introspectedTable.getBaseColumns());
+        param.put("keyColumnList", introspectedTable.getPrimaryKeyColumns());
+
+        StringBuffer sb = new StringBuffer();
+        boolean splitFlag = false;
+        for (IntrospectedColumn introspectedColumn : introspectedTable.getBaseColumns()) {
+            if (introspectedColumn.getJdbcType() == Types.VARCHAR) {
+                if(splitFlag){
+                    sb.append("/");
+                }else {
+                    splitFlag =true;
+                }
+                sb.append(introspectedColumn.getRemarks() );
+            }
+        }
+        param.put("placeholder", sb.toString());
+
+        sb.setLength(0);
+        boolean andFlag = false;
+        for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
+            if(andFlag){
+                sb.append("&");
+            }else {
+                andFlag =true;
+            }
+            sb.append(introspectedColumn.getJavaProperty() + "=${item." + introspectedColumn.getJavaProperty() + "}");
+        }
+        param.put("primaryKey", sb.toString());
 
         List<GeneratedXmlFile> answer = new ArrayList<GeneratedXmlFile>(3);
         answer.add(getListPage(cfg, param));

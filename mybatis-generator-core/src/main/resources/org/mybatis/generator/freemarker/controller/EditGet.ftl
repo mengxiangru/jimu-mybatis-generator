@@ -1,5 +1,5 @@
 
-        ${domainObjectName} ${domainObjectNameWithLower} = ${domainObjectNameWithLower}Service.get${domainObjectName}ById(id);
+        ${domainObjectName} ${domainObjectNameWithLower} = ${domainObjectNameWithLower}Service.get${domainObjectName}ById(key);
         Vm${domainObjectName} vm${domainObjectName} = new Vm${domainObjectName}();
         vm${domainObjectName}.convertToVM(${domainObjectNameWithLower});
 
