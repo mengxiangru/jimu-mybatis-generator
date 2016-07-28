@@ -50,7 +50,7 @@
                         <#if keyColumn.fullyQualifiedJavaType == "java.util.Date">
                             <input class="js-datetimeHour-picker form-control" type="text" id="${keyColumn.javaProperty}" name="${keyColumn.javaProperty}" readonly/>
                         <#else>
-                            <sf:input cssClass="form-control" path="${keyColumn.javaProperty}" id="${keyColumn.javaProperty}" placeholder="最长${keyColumn.length}" maxlength="${keyColumn.length}" readonly/>
+                            <sf:input cssClass="form-control" path="${keyColumn.javaProperty}" id="${keyColumn.javaProperty}" placeholder="最长${keyColumn.length}" maxlength="${keyColumn.length}" readonly="true"/>
                         </#if>
                     </div>
                 </div>

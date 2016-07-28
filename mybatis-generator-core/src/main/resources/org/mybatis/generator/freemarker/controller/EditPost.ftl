@@ -4,7 +4,7 @@
                 return "/${domainObjectName}/Edit${domainObjectName}";
         }
 
-        ${domainObjectName} ${domainObjectNameWithLower} = ${domainObjectNameWithLower}Service.get${domainObjectName}ById(vm${domainObjectName}.getId());
+        ${domainObjectName} ${domainObjectNameWithLower} = ${domainObjectNameWithLower}Service.get${domainObjectName}ById(key);
         ${domainObjectNameWithLower} = vm${domainObjectName}.updateModel(${domainObjectNameWithLower});
 
         ${domainObjectNameWithLower}Service.updateById(${domainObjectNameWithLower});
